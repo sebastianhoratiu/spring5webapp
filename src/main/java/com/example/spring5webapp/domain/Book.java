@@ -1,6 +1,7 @@
 package com.example.spring5webapp.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,18 +12,18 @@ public class Book {
     private Long id;
     private String title;
     private String isbn;
-    @ManyToMany
+
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
 
     public Book() {
     }
 
-    public Book(String title, String isbn, Set<Author> authors) {
+    public Book(String title, String isbn) {
         this.title = title;
         this.isbn = isbn;
-        this.authors = authors;
     }
 
     public String getTitle() {
@@ -53,7 +54,6 @@ public class Book {
         this.id = id;
     }
 
-    @Id
     public Long getId() {
         return id;
     }
@@ -80,6 +80,6 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return id != null ? id.hashCode() : 0;
     }
 }
